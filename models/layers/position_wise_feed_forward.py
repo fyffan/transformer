@@ -5,7 +5,8 @@
 """
 from torch import nn
 
-
+# 逐位置前馈网络
+# 用于进一步对每个位置的表示进行非线性变换，提升模型的表达能力。
 class PositionwiseFeedForward(nn.Module):
 
     def __init__(self, d_model, hidden, drop_prob=0.1):
