@@ -14,15 +14,18 @@ class DecoderLayer(nn.Module):
 
     def __init__(self, d_model, ffn_hidden, n_head, drop_prob):
         super(DecoderLayer, self).__init__()
+        # 自注意力
         self.self_attention = MultiHeadAttention(d_model=d_model, n_head=n_head)
         self.norm1 = LayerNorm(d_model=d_model)
         self.dropout1 = nn.Dropout(p=drop_prob)
 
+        # 编码器-解码器注意力
         self.enc_dec_attention = MultiHeadAttention(d_model=d_model, n_head=n_head)
         self.norm2 = LayerNorm(d_model=d_model)
         self.dropout2 = nn.Dropout(p=drop_prob)
 
         self.ffn = PositionwiseFeedForward(d_model=d_model, hidden=ffn_hidden, drop_prob=drop_prob)
+        # 非线性变换
         self.norm3 = LayerNorm(d_model=d_model)
         self.dropout3 = nn.Dropout(p=drop_prob)
 
@@ -34,6 +37,7 @@ class DecoderLayer(nn.Module):
         # 2. add and norm
         x = self.dropout1(x)
         x = self.norm1(x + _x)
+        # 解码层自注意力的结果应该作为Q
 
         if enc is not None:
             # 3. compute encoder - decoder attention
