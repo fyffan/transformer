@@ -22,16 +22,24 @@ class MultiHeadAttention(nn.Module):
     def forward(self, q, k, v, mask=None):
         # 1. dot product with weight matrices
         q, k, v = self.w_q(q), self.w_k(k), self.w_v(v)
+        # 输入的QKV应该是[batch_size, length, d_model]的形式
+        # 输出的QKV也是[batch_size, length, d_model]的形式
 
         # 2. split tensor by number of heads
         q, k, v = self.split(q), self.split(k), self.split(v)
+        # 分成多头的形式[batch_size, head, length, d_tensor]
+        # 这里的d_tensor = d_model // n_head
+        # 这里的d_tensor是每个头的维度，d_model是总的维度
 
         # 3. do scale dot product to compute similarity
         out, attention = self.attention(q, k, v, mask=mask)
+        # out : [batch_size, head, length, d_tensor]
 
         # 4. concat and pass to linear layer
         out = self.concat(out)
         out = self.w_concat(out)
+        # 经过w_concat线性变换整合，concat只是对形状进行改变，每个注意力头的信息并没有融合起来
+        # 使用w_concat线性变换，把多个注意力头的信息进行整合，并允许模型学习如何组合这些信息
 
         # 5. visualize attention map
         # TODO : we should implement visualization

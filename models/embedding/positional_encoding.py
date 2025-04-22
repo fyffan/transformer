@@ -6,7 +6,7 @@
 import torch
 from torch import nn
 
-
+# 位置编码类
 class PositionalEncoding(nn.Module):
     """
     compute sinusoid encoding.
@@ -27,10 +27,11 @@ class PositionalEncoding(nn.Module):
         self.encoding.requires_grad = False  # we don't need to compute gradient
 
         pos = torch.arange(0, max_len, device=device)
-        pos = pos.float().unsqueeze(dim=1)
+        pos = pos.float().unsqueeze(dim=1)  # [max_len, 1]
         # 1D => 2D unsqueeze to represent word's position
 
         _2i = torch.arange(0, d_model, step=2, device=device).float()
+        # [0, 2, 4, ..., d_model-2]
         # 'i' means index of d_model (e.g. embedding size = 50, 'i' = [0,50])
         # "step=2" means 'i' multiplied with two (same with 2 * i)
 

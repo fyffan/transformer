@@ -25,11 +25,13 @@ class ScaleDotProductAttention(nn.Module):
         # input is 4 dimension tensor
         # [batch_size, head, length, d_tensor]
         batch_size, head, length, d_tensor = k.size()
+        # 多头一起算
 
         # 1. dot product Query with Key^T to compute similarity
         k_t = k.transpose(2, 3)  # transpose
         score = (q @ k_t) / math.sqrt(d_tensor)  # scaled dot product
-
+        
+        # 用于解码器，解码器的KV来自编码器的输出，Q是解码器的输入，Q无法得知后续的KV的值，mask这一部分
         # 2. apply masking (opt)
         if mask is not None:
             score = score.masked_fill(mask == 0, -10000)

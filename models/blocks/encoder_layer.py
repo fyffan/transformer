@@ -19,6 +19,7 @@ class EncoderLayer(nn.Module):
         self.dropout1 = nn.Dropout(p=drop_prob)
 
         self.ffn = PositionwiseFeedForward(d_model=d_model, hidden=ffn_hidden, drop_prob=drop_prob)
+        # 非线性层，提高模型表达能力
         self.norm2 = LayerNorm(d_model=d_model)
         self.dropout2 = nn.Dropout(p=drop_prob)
 
